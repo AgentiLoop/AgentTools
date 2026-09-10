@@ -48,6 +48,6 @@ public enum APIProvider: String, CaseIterable, Codable, Sendable {
     }
 
     public static var selectableProviders: [APIProvider] {
-        [.claude, .codex, .openAI, .gemini, .grok, .mistral, .codestral, .vibe, .deepSeek, .huggingFace, .zAI, .bigModel, .qwen, .miniMax, .openRouter, .ollama, .localOllama, .vLLM, .lmStudio]
+        [.claude, .codex, .openAI, .gemini, .grok, .mistral, .vibe, .deepSeek, .huggingFace, .zAI, .bigModel, .qwen, .miniMax, .openRouter, .ollama, .localOllama, .vLLM, .lmStudio]
     }
 }
