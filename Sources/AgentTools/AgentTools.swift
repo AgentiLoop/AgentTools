@@ -377,10 +377,10 @@ public enum AgentTools {
 
     // MARK: - Tool List per Provider (for ToolsView)
 
-    /// Returns the tools available for a given provider.
+    /// Returns the full tool list (same for every provider).
     /// Web search via Tavily is now available for all providers as a backup search option.
     /// Conversation tools for natural language tasks are also included.
-    public static func tools(for provider: APIProvider) -> [ToolDef] {
+    public static func tools() -> [ToolDef] {
         // All providers get web_search and conversation tools
         return commonTools + webSearchTools + conversationTools
     }
