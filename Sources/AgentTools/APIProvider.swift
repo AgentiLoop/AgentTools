@@ -19,6 +19,7 @@ public enum APIProvider: String, CaseIterable, Codable, Sendable {
     case lmStudio = "lmStudio"
     case miniMax = "miniMax"
     case openRouter = "openRouter"
+    case requesty = "requesty"
     case foundationModel = "foundationModel"
 
     public var displayName: String {
@@ -41,11 +42,12 @@ public enum APIProvider: String, CaseIterable, Codable, Sendable {
         case .qwen: "Qwen"
         case .miniMax: "MiniMax"
         case .openRouter: "OpenRouter"
+        case .requesty: "Requesty"
         case .foundationModel: "Apple Intelligence"
         }
     }
 
     public static var selectableProviders: [APIProvider] {
-        [.claude, .codex, .openAI, .gemini, .grok, .mistral, .vibe, .deepSeek, .huggingFace, .zAI, .bigModel, .qwen, .miniMax, .openRouter, .ollama, .localOllama, .vLLM, .lmStudio]
+        [.claude, .codex, .openAI, .gemini, .grok, .mistral, .vibe, .deepSeek, .huggingFace, .zAI, .bigModel, .qwen, .miniMax, .openRouter, .requesty, .ollama, .localOllama, .vLLM, .lmStudio]
     }
 }
