@@ -459,7 +459,7 @@ public enum AgentTools {
         // --- File Manager (consolidated) ---
         ToolDef(
             name: Name.fileManager,
-            description: "File ops. edit=replace string. diff_apply=replace line range (preferred for multi-line edits). mkdir=create dir. cd=change project folder. copy_image=copy PNG/JPEG between file paths, the system clipboard, and chat attachments (source/dest: \"clipboard\" | \"chat\" | \"chat:<index>\" | \"/abs/path.png\").",
+            description: "File ops. edit=replace string. diff_apply=replace line range (preferred for multi-line edits). mkdir=create dir. cd=change project folder. copy_image=copy PNG/JPEG from a chat attachment, the clipboard, or a file to the clipboard or a file (source: \"clipboard\" | \"chat\" | \"chat:<index>\" | \"/abs/path.png\"; dest: \"clipboard\" | \"/abs/path.png\" — dest \"chat\" just writes /tmp/chat.png).",
             properties: [
                 "action": ["type": "string", "description": "read|write|edit|create|apply|undo|diff_apply|list|search|read_dir|mkdir|cd|if_to_switch|extract_function|copy_image"],
                 "dest": ["type": "string", "description": "For copy_image: destination — \"clipboard\" (default) or an absolute PNG/JPEG path."],
