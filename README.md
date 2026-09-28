@@ -4,8 +4,8 @@ A Swift package that provides shared system prompts, tool definitions, and API p
 
 ## Requirements
 
-- macOS 26+
-- Swift 6.2+
+- macOS 14+
+- Swift 6.4+
 - No external dependencies (Foundation only)
 
 ## Installation
@@ -14,7 +14,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(path: "../AgentTools")
+    .package(url: "https://github.com/AgentiLoop/AgentTools.git", from: "2.53.19")
 ]
 ```
 
@@ -25,9 +25,9 @@ import AgentTools
 
 // Get system prompt for an agent session
 let prompt = AgentTools.systemPrompt(
-    userName: "todd",
-    userHome: "/Users/todd",
-    projectFolder: "/Users/todd/MyProject"
+    userName: "you",
+    userHome: "/Users/you",
+    projectFolder: "/Users/you/MyProject"
 )
 
 // Get tool definitions for a specific provider
@@ -106,6 +106,14 @@ public struct ToolDef
 ```
 
 Generic tool definition with name, description, properties dictionary, and required parameter list.
+
+## Part of AgentiLoop Agent!
+
+AgentTools is one of the open-source building blocks of **[AgentiLoop Agent!](https://github.com/AgentiLoop/Agent)**, the native AI agent for macOS 14.6+ on Apple Silicon and Intel. Agent! codes in Xcode, drives any Mac app, runs shell as you or as root, and works with 23 LLM providers plus on-device Apple Intelligence.
+
+🌐 [agentiloop.ai](https://agentiloop.ai/) · ⬇️ [Download Agent!](https://github.com/AgentiLoop/Agent/releases/latest) · 🍺 `brew install --cask agentiloop-agent` · 💻 CLIs: [Rust](https://github.com/AgentiLoop/AgentiLoopCLI) / [Go](https://github.com/AgentiLoop/AgentiLoopGo)
+
+**More Agent! packages:** [AgentAccess](https://github.com/AgentiLoop/AgentAccess) · [AgentAudit](https://github.com/AgentiLoop/AgentAudit) · [AgentColorSyntax](https://github.com/AgentiLoop/AgentColorSyntax) · [AgentD1F](https://github.com/AgentiLoop/AgentD1F) · [AgentEventBridges](https://github.com/AgentiLoop/AgentEventBridges) · [AgentLLM](https://github.com/AgentiLoop/AgentLLM) · [AgentMCP](https://github.com/AgentiLoop/AgentMCP) · [AgentSwift](https://github.com/AgentiLoop/AgentSwift) · [AgentTerminalNeo](https://github.com/AgentiLoop/AgentTerminalNeo) · [AgentScripts](https://github.com/AgentiLoop/AgentScripts)
 
 ## License
 
