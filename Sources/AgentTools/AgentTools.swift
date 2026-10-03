@@ -217,7 +217,7 @@ public enum AgentTools {
         - Disk writes need root — route straight to root_shell: `dd of=/dev/disk*`, `mkfs.*`, `diskutil eraseDisk|zeroDisk|secureErase|eraseVolume`, `> /dev/disk*`. The user path fails with "Operation not permitted" — don't try it first. `diskutil unmountDisk /dev/diskN` before writing; pipelines like `gunzip -c X.img.gz | dd of=/dev/disk5 bs=4M` are fine.
         - HARD-BLOCKED (local guardrail, never attempt even as a "test"): `rm -rf /` (any flag spelling, incl. --no-preserve-root), `rm -rf ~` / `~/*` / `$HOME` / `$HOME/*`, and bare `rm -rf *` / `.` / `..` / `.*`. sudo/exec/eval/doas/env prefixes don't bypass it. Other destructive patterns aren't pre-blocked — they just fail at the OS level if the user agent lacks permission.
         - TCC (in-process): agent_script(run), applescript(execute), accessibility. No TCC: user_shell, root_shell, shell.
-
+        - SHELL TIMEOUT: every user_shell/root_shell/shell/batch call is killed after a hard limit (default 10 min, user-configurable). On timeout the tool_result is the partial output ending in a `[TIMEOUT]` line and exit code 124 — never rerun the same command unchanged. Never write unbounded loops (`while true`, `tail -f`, `watch`, servers in the foreground). Long jobs: run in the background (`cmd > /tmp/x.log 2>&1 &`) and poll the log with a later call, or bound them yourself (`perl -e 'alarm 120; exec @ARGV' -- cmd` — macOS has no GNU `timeout`).
         AGENT SCRIPTS: ~/Documents/AgentScript/agents/ — Swift dylibs, entry `@_cdecl("script_main") public func scriptMain() -> Int32`, full Swift + TCC. App automation: prefer ScriptingBridge (`import XBridge`, typed, compile-time checked; SDEFs at ~/Documents/AgentScript/system/SDEFs/); NSAppleScript (`NSAppleScript(source:)?.executeAndReturnError(&err)`) is a valid fallback — mix freely.
         ENV (uniform across agent_script runs and every shell tool): AGENT_PROJECT_FOLDER is always the active project folder (or $HOME) and is also the process cwd — no `cd` needed. AGENT_SCRIPT_ARGS is set only when you pass `arguments:"..."` to agent_script(action:"run") — that is the only way to pass data; never set env vars yourself, never parse the project folder out of the args.
         Read patterns — shell: `"$AGENT_PROJECT_FOLDER"`; Swift: `ProcessInfo.processInfo.environment["AGENT_PROJECT_FOLDER"]` / `["AGENT_SCRIPT_ARGS"]`; AppleScript: `do shell script "echo $AGENT_PROJECT_FOLDER"`; JXA: `$.NSProcessInfo.processInfo.environment.objectForKey('AGENT_PROJECT_FOLDER').js`.
@@ -358,6 +358,7 @@ public enum AgentTools {
         - shell fallback when Launch Agent unavailable.
         - root_shell (Launch Daemon) for admin tasks only — never everyday.
         - NEVER sudo — use root_shell.
+        - SHELL TIMEOUT: shell calls are killed after a hard limit (default 10 min). Result = partial output + `[TIMEOUT]`, exit 124. No `while true`/`tail -f`/foreground servers; background long jobs (`cmd > /tmp/x.log 2>&1 &`) and poll, or bound with `perl -e 'alarm N; exec @ARGV' -- cmd`.
 
         SHELL SAFETY — HARD-BLOCKED (refused locally before XPC/Process):
         - `rm -rf /` (and [rR][fF] / `--no-preserve-root` variants).
@@ -523,7 +524,7 @@ public enum AgentTools {
         // --- Coding: Shell ---
         ToolDef(
             name: Name.executeAgentCommand,
-            description: "Shell as current user via Launch Agent. Primary shell tool.",
+            description: "Shell as current user via Launch Agent. Primary shell tool. Hard timeout (default 10 min): a hung/looping command is killed and returns partial output + [TIMEOUT]. Background long jobs (& + log) or bound them.",
             properties: [
                 "command": ["type": "string", "description": "Bash command"],
             ],
@@ -531,7 +532,7 @@ public enum AgentTools {
         ),
         ToolDef(
             name: Name.executeDaemonCommand,
-            description: "Shell as ROOT via Launch Daemon. Admin tasks only — no sudo.",
+            description: "Shell as ROOT via Launch Daemon. Admin tasks only — no sudo. Same hard timeout as user_shell.",
             properties: [
                 "command": ["type": "string", "description": "Bash command (runs as root)"],
             ],
@@ -539,7 +540,7 @@ public enum AgentTools {
         ),
         ToolDef(
             name: Name.runShellScript,
-            description: "Shell fallback when Launch Agent is off.",
+            description: "Shell fallback when Launch Agent is off. Same hard timeout as user_shell.",
             properties: [
                 "command": ["type": "string", "description": "Bash command"],
             ],
@@ -547,7 +548,7 @@ public enum AgentTools {
         ),
         ToolDef(
             name: Name.batchCommands,
-            description: "Multiple shell commands in one call (newline-separated).",
+            description: "Multiple shell commands in one call (newline-separated). Same hard timeout as user_shell applies to the whole batch.",
             properties: [
                 "commands": ["type": "string", "description": "Newline-separated commands"],
             ],
