@@ -308,7 +308,7 @@ public enum AgentTools {
         Every action takes role/title/value/appBundleId. NO coordinates anywhere.
         APP NAME: pass either a natural name like "Photo Booth", "Safari", "TextEdit" OR a real bundle ID. The resolver auto-converts natural names via the SDEF catalog and the installed-apps scan. DO NOT memorize bundle IDs.
         - open_app(appBundleId): opens/activates AND returns elements. Use FIRST if app may not be running.
-        - click_element(role,title,appBundleId): finds AND clicks in ONE call. PREFERRED for clicking.
+        - click_element(role,title,appBundleId): finds AND clicks in ONE call. PREFERRED for clicking. Uses AXPress like AppleScript click (works on off-screen web links / rows, no mouse move); result "changed" reports what happened (window, sheet, focus, page URL, element state, window text).
         - type_into_element(role,title,text,appBundleId): replaces a text field's text by element identity (NOT at cursor) and verifies it; title = label, placeholder or name. Also fills web forms in Safari/Chrome (inputs, textareas, rich editors) with real keystrokes so page scripts see them.
         - find_element(role,title,appBundleId): finds without clicking. Use when reading element properties.
         - scroll_to_element(role,title,appBundleId): scrolls the AXScrollArea until the target appears.
@@ -685,7 +685,7 @@ public enum AgentTools {
                 "observerId": ["type": "string", "description": "For observe_poll / observe_stop: the id returned by observe_start"],
                 "clear": ["type": "boolean", "description": "For observe_poll: drop returned events from the buffer (default true)"],
                 "depth": ["type": "integer", "description": "For get_children / inspect_element: traversal depth (default 3)"],
-                "verify": ["type": "boolean", "description": "For click_element / type_into_element: verify the action took effect (default false for click, true for type)"],
+                "verify": ["type": "boolean", "description": "For click_element: if AXPress changed nothing visible, retry once with a hit-tested mouse click (default false). For type_into_element: read the text back (default true)."],
                 "x": ["type": "number", "description": "For set_window_frame: window x position"],
                 "y": ["type": "number", "description": "For set_window_frame: window y position"],
                 "width": ["type": "number", "description": "For set_window_frame: window width"],
