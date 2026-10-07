@@ -709,7 +709,7 @@ public enum AgentTools {
                 "action": ["type": "string", "description": "open|find|click|type|execute_js|get_url|get_title|read_content|google_search|scroll_to|select|submit|navigate|list_tabs|switch_tab|list_windows|scan|search"],
                 "url": ["type": "string", "description": "URL to open"],
                 "selector": ["type": "string", "description": "CSS selector for click/type/submit"],
-                "text": ["type": "string", "description": "Text to type"],
+                "text": ["type": "string", "description": "Text to type. For select: the option text. For navigate: back|forward|reload (or pass url to go to a page). For switch_tab: the tab number from list_tabs (1-based) or part of its title"],
                 "query": ["type": "string", "description": "Search query"],
                 "script": ["type": "string", "description": "JavaScript code (in-page JS, runs through Safari's `do JavaScript` AppleScript command)"],
             ],
