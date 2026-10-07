@@ -308,7 +308,7 @@ public enum AgentTools {
         APP NAME: pass either a natural name like "Photo Booth", "Safari", "TextEdit" OR a real bundle ID. The resolver auto-converts natural names via the SDEF catalog and the installed-apps scan. DO NOT memorize bundle IDs.
         - open_app(appBundleId): opens/activates AND returns elements. Use FIRST if app may not be running.
         - click_element(role,title,appBundleId): finds AND clicks in ONE call. PREFERRED for clicking.
-        - type_into_element(role,title,text,appBundleId): types into a text field by element identity (NOT at cursor).
+        - type_into_element(role,title,text,appBundleId): replaces a text field's text by element identity (NOT at cursor) and verifies it; title = label, placeholder or name. Also fills web forms in Safari/Chrome (inputs, textareas, rich editors) with real keystrokes so page scripts see them.
         - find_element(role,title,appBundleId): finds without clicking. Use when reading element properties.
         - scroll_to_element(role,title,appBundleId): scrolls the AXScrollArea until the target appears.
         - click_menu_item(appBundleId,menuPath:"File > Save"): replaces keyboard shortcuts. Also menu-bar extras (status items): menuPath:"Wi-Fi > Wi-Fi Settings", "Focus > Do Not Disturb" — omit appBundleId to search every app's extras.
@@ -668,7 +668,7 @@ public enum AgentTools {
                 "title": ["type": "string", "description": "Title/name to match (partial, case-insensitive). Searches AXTitle + AXDescription + AXHelp."],
                 "value": ["type": "string", "description": "Value to match (partial)"],
                 "appBundleId": ["type": "string", "description": "REQUIRED for most actions. Bundle ID like 'com.apple.PhotoBooth'. App names like 'Photo Booth' auto-resolve. If you don't know the bundle ID, call manage_app(action:list) first."],
-                "text": ["type": "string", "description": "For type_into_element: text to type into the element identified by role/title. For select_option: option name, on/off, or number. For select_row: text of any cell in the row"],
+                "text": ["type": "string", "description": "For type_into_element: text that replaces the contents of the field identified by role/title (label, placeholder or name) — verified by reading it back; works in web page forms too. For select_option: option name, on/off, or number. For select_row: text of any cell in the row"],
                 "windowId": ["type": "integer", "description": "For screenshot/list_windows: window ID"],
                 "limit": ["type": "integer", "description": "For list_windows: max windows (default 50)"],
                 "ax_action": ["type": "string", "description": "For perform_action (and select_row: AXOpen opens the row): AXPress, AXConfirm, AXActivate, AXCancel, AXShowMenu, AXDismiss, AXIncrement, AXDecrement, AXExpand, AXCollapse, AXOpen, AXRaise, AXZoom, AXMinimize, AXCopy, AXCut, AXPaste, AXSelect, AXSelectAll, AXScrollToVisible, AXScrollPageUp/Down/Left/Right, AXFocus, AXShowDefaultUI, AXShowAlternateUI, AXDelete, AXPick"],
