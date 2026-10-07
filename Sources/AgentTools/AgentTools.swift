@@ -204,6 +204,7 @@ public enum AgentTools {
         - Prefer accessibility over screenshots for reading UI — accessibility(action:"read_text", appBundleId:...) returns every visible text of the front window in one call (table rows as 'Row: a | b | c', toggles as 'Name [on]'), works in apps with no AppleScript dictionary; find_element returns text/roles/values. Screenshots only when visual layout matters.
         - After clicks that trigger animations/countdowns (Photo Booth, alerts): wait_for_element on what should appear next — not a fixed sleep.
         - Menus: accessibility(action:"click_menu_item", appBundleId:..., menuPath:"File > Save"). Windows: set_window_frame. Scrolling: scroll_to_element.
+        - Menu-bar extras / status items (Wi‑Fi, Focus, Clock, Control Center, third-party icons — instead of AppleScript 'menu bar 2', which can't see macOS 26 extras): accessibility(action:"click_menu_item", menuPath:"Wi-Fi > Wi-Fi Settings") with NO appBundleId searches every app's extras, then clicks inside its menu or popover panel; error lists the real extras/items.
         - Setting a control (instead of AppleScript 'click menu item X of pop up button' / 'set value of checkbox to 1'): accessibility(action:"select_option", role:..., title:..., text:...) — popup/menu button/combo box → picks the option named text (error lists the real options); checkbox/switch/radio → text "on"/"off", only presses if the state differs; slider → number; text field → replaces its text. Verifies the result.
         - Picking a row in a table/list/sidebar (instead of AppleScript 'select (first row whose value is X)'): accessibility(action:"select_row", appBundleId:..., text:"row text") — matches any cell (exact, prefix, contains) across every list in the front window, main content before sidebar; error lists the real rows. Add ax_action:"AXOpen" to open it too (like double-clicking a file in Finder). role/title narrow to one table.
         - Browser content: find_element with AXWebArea/AXLink/AXButton/AXTextField/AXImage/AXHeading inside the browser's appBundleId — or the safari tool. Safari JS: `tell application "Safari" to do JavaScript "..." in document 1`.
@@ -310,7 +311,7 @@ public enum AgentTools {
         - type_into_element(role,title,text,appBundleId): types into a text field by element identity (NOT at cursor).
         - find_element(role,title,appBundleId): finds without clicking. Use when reading element properties.
         - scroll_to_element(role,title,appBundleId): scrolls the AXScrollArea until the target appears.
-        - click_menu_item(appBundleId,menuPath:"File > Save"): replaces keyboard shortcuts.
+        - click_menu_item(appBundleId,menuPath:"File > Save"): replaces keyboard shortcuts. Also menu-bar extras (status items): menuPath:"Wi-Fi > Wi-Fi Settings", "Focus > Do Not Disturb" — omit appBundleId to search every app's extras.
         - set_window_frame(appBundleId,x,y,width,height): replaces drag-to-move/resize.
         - manage_app(sub_action:"launch|activate|hide|unhide|quit|list"): app lifecycle.
         - NEVER perform_action with AXPress — use click_element.
@@ -672,7 +673,7 @@ public enum AgentTools {
                 "limit": ["type": "integer", "description": "For list_windows: max windows (default 50)"],
                 "ax_action": ["type": "string", "description": "For perform_action (and select_row: AXOpen opens the row): AXPress, AXConfirm, AXActivate, AXCancel, AXShowMenu, AXDismiss, AXIncrement, AXDecrement, AXExpand, AXCollapse, AXOpen, AXRaise, AXZoom, AXMinimize, AXCopy, AXCut, AXPaste, AXSelect, AXSelectAll, AXScrollToVisible, AXScrollPageUp/Down/Left/Right, AXFocus, AXShowDefaultUI, AXShowAlternateUI, AXDelete, AXPick"],
                 "sub_action": ["type": "string", "description": "For manage_app: launch|activate|hide|unhide|quit|list. For clipboard: read|write|paste|copy_image."],
-                "menuPath": ["type": "string", "description": "For click_menu_item: 'File > Save', 'Edit > Copy', etc. (use ' > ' as separator)"],
+                "menuPath": ["type": "string", "description": "For click_menu_item: 'File > Save', 'Edit > Copy', etc. (use ' > ' as separator). Menu-bar extras / status items work too: 'Wi-Fi > Wi-Fi Settings', 'Focus > Do Not Disturb', 'Clock' (omit appBundleId to search every app's extras; also clicks items in popover panels like Control Center)"],
                 "properties": ["type": "object", "description": "For set_properties: key-value pairs to set on the element"],
                 "timeout": ["type": "number", "description": "For find_element / wait_for_element / wait_until_actionable: max seconds (default 5)"],
                 "pollInterval": ["type": "number", "description": "For wait_for_element (default 0.5) / wait_until_actionable (default 0.1): poll interval seconds"],
